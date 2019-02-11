@@ -14,23 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aranea.net.codec.game;
+package com.aranea.net.codec.ondemand;
 
 import com.aranea.net.ChannelSession;
-import com.aranea.net.codec.ChannelMessageDecoder;
+import com.aranea.net.codec.ChannelMessageEncoder;
+import java.nio.ByteBuffer;
 
-public class ServiceRequestMessageDecoder implements ChannelMessageDecoder {
-
-    public static final int LOGIN_SERVICE_INDEX = 0xE;
-    public static final int ONDEMAND_SERVICE_INDEX = 0xF;
+public class OndemandResponseMessageEncoder implements ChannelMessageEncoder<OndemandResponse> {
 
     @Override
-    public boolean decode(ChannelSession session) {
-        int service = session.getBuffer().get() & 0xFF;
-        if (service == LOGIN_SERVICE_INDEX) {
-            session.setDecoder(new LoginHandshakeMessageDecoder());
-            return true;
-        }
-        return false;
+    public ByteBuffer encode(ChannelSession session, OndemandResponse message) {
+        return null;
     }
 }

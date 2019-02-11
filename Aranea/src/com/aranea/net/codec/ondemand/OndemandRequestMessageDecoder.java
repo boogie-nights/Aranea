@@ -14,25 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aranea.net;
+package com.aranea.net.codec.ondemand;
 
-import com.aranea.net.codec.ServiceRequestMessageDecoder;
-import java.io.IOException;
-import java.net.InetSocketAddress;
+import com.aranea.net.ChannelSession;
+import com.aranea.net.codec.ChannelMessageDecoder;
 
-public class GameChannelDemultiplexer extends ChannelDemultiplexer {
-
-    public GameChannelDemultiplexer(InetSocketAddress address) throws IOException {
-        super(address);
-    }
+public class OndemandRequestMessageDecoder implements ChannelMessageDecoder {
 
     @Override
-    public void close(ChannelSession session) {
-
-    }
-
-    @Override
-    public void accept(ChannelSession session) {
-        session.setDecoder(new ServiceRequestMessageDecoder());
+    public boolean decode(ChannelSession session) {
+        int type = session.getBuffer().get() & 0xFF;
+        int file = session.getBuffer().getShort() & 0xFFFF;
+        int priority = session.getBuffer().get() & 0xFF;
+        return true;
     }
 }
