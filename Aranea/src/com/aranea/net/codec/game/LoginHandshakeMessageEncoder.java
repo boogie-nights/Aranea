@@ -17,24 +17,17 @@
 package com.aranea.net.codec.game;
 
 import com.aranea.net.ChannelSession;
-import com.aranea.net.codec.ChannelMessageDecoder;
+import com.aranea.net.codec.ChannelMessageEncoder;
+import java.nio.ByteBuffer;
 
-public class LoginPayloadMessageDecoder implements ChannelMessageDecoder {
-
-    public static final int SUCCESSFUL_LOGIN_RESPONSE_OPCODE = 2;
-
-    private final int length;
-
-    public LoginPayloadMessageDecoder(int length) {
-        this.length = length;
-    }
+public class LoginHandshakeMessageEncoder implements ChannelMessageEncoder<LoginHandshakeResponse> {
 
     @Override
-    public boolean decode(ChannelSession session) {
-        session.encode(new LoginPayloadResponse(SUCCESSFUL_LOGIN_RESPONSE_OPCODE, 0, false));
-
-        session.setEncoder(new GameMessageEncoder());
-        session.setDecoder(new GameMessageDecoder());
-        return true;
+    public ByteBuffer encode(ChannelSession session, LoginHandshakeResponse response) {
+        ByteBuffer buffer = ByteBuffer.allocate(Byte.BYTES + Long.BYTES + Long.BYTES);
+        buffer.put((byte) response.getStatus());
+        buffer.putLong(0);
+        buffer.putLong(response.getSeed());
+        return buffer;
     }
 }

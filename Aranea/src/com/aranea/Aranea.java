@@ -36,6 +36,5 @@ public class Aranea {
         } catch (IOException exception) {
             exception.printStackTrace(System.out);
         }
-        System.out.println("Aranea has successfully started.");
     }
 }

@@ -16,25 +16,29 @@
  */
 package com.aranea.net.codec.game;
 
-import com.aranea.net.ChannelSession;
-import com.aranea.net.codec.ChannelMessageDecoder;
+public class LoginHandshakeResponse {
 
-public class LoginPayloadMessageDecoder implements ChannelMessageDecoder {
+    private int status;
+    private long seed;
 
-    public static final int SUCCESSFUL_LOGIN_RESPONSE_OPCODE = 2;
-
-    private final int length;
-
-    public LoginPayloadMessageDecoder(int length) {
-        this.length = length;
+    public LoginHandshakeResponse(int status, long seed) {
+        this.status = status;
+        this.seed = seed;
     }
 
-    @Override
-    public boolean decode(ChannelSession session) {
-        session.encode(new LoginPayloadResponse(SUCCESSFUL_LOGIN_RESPONSE_OPCODE, 0, false));
+    public int getStatus() {
+        return status;
+    }
 
-        session.setEncoder(new GameMessageEncoder());
-        session.setDecoder(new GameMessageDecoder());
-        return true;
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public long getSeed() {
+        return seed;
+    }
+
+    public void setSeed(long seed) {
+        this.seed = seed;
     }
 }

@@ -18,7 +18,6 @@ package com.aranea.net.codec.game;
 
 import com.aranea.net.ChannelSession;
 import com.aranea.net.codec.ChannelMessageDecoder;
-import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 
 public class LoginHandshakeMessageDecoder implements ChannelMessageDecoder {
@@ -33,11 +32,7 @@ public class LoginHandshakeMessageDecoder implements ChannelMessageDecoder {
         session.getBuffer().get();
 
         SecureRandom random = new SecureRandom();
-        ByteBuffer response = ByteBuffer.allocate(Byte.BYTES + Long.BYTES + Long.BYTES);
-        response.putLong(0);
-        response.put((byte) 0);
-        response.putLong(random.nextLong());
-        session.write(response);
+        session.encode(new LoginHandshakeResponse(0, random.nextLong()));
 
         session.setDecoder(new LoginRequestMessageDecoder());
         return true;

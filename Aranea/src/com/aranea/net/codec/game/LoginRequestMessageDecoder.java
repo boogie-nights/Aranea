@@ -31,6 +31,8 @@ public class LoginRequestMessageDecoder implements ChannelMessageDecoder {
             return false;
 
         final int length = session.getBuffer().get() & 0xFF;
+        
+        session.setEncoder(new LoginPayloadMessageEncoder());
         session.setDecoder(new LoginPayloadMessageDecoder(length));
         return true;
     }

@@ -19,6 +19,7 @@ package com.aranea.net.codec;
 import com.aranea.net.ChannelSession;
 
 import com.aranea.net.codec.game.LoginHandshakeMessageDecoder;
+import com.aranea.net.codec.game.LoginHandshakeMessageEncoder;
 import com.aranea.net.codec.ondemand.OndemandRequestMessageDecoder;
 import com.aranea.net.codec.ondemand.OndemandResponseMessageEncoder;
 
@@ -31,6 +32,7 @@ public class ServiceRequestMessageDecoder implements ChannelMessageDecoder {
     public boolean decode(ChannelSession session) {
         int service = session.getBuffer().get() & 0xFF;
         if (service == LOGIN_SERVICE_INDEX) {
+            session.setEncoder(new LoginHandshakeMessageEncoder());
             session.setDecoder(new LoginHandshakeMessageDecoder());
         } else if (service == ONDEMAND_SERVICE_INDEX) {
             session.setEncoder(new OndemandResponseMessageEncoder());

@@ -16,25 +16,39 @@
  */
 package com.aranea.net.codec.game;
 
-import com.aranea.net.ChannelSession;
-import com.aranea.net.codec.ChannelMessageDecoder;
-
-public class LoginPayloadMessageDecoder implements ChannelMessageDecoder {
-
-    public static final int SUCCESSFUL_LOGIN_RESPONSE_OPCODE = 2;
-
-    private final int length;
-
-    public LoginPayloadMessageDecoder(int length) {
-        this.length = length;
+public class LoginPayloadResponse {
+    
+    private int opcode;
+    private int rights;
+    private boolean flagged;
+    
+    public LoginPayloadResponse(int opcode, int rights, boolean flagged) {
+        this.opcode = opcode;
+        this.rights = rights;
+        this.flagged = flagged;
     }
 
-    @Override
-    public boolean decode(ChannelSession session) {
-        session.encode(new LoginPayloadResponse(SUCCESSFUL_LOGIN_RESPONSE_OPCODE, 0, false));
+    public int getOpcode() {
+        return opcode;
+    }
 
-        session.setEncoder(new GameMessageEncoder());
-        session.setDecoder(new GameMessageDecoder());
-        return true;
+    public void setOpcode(int opcode) {
+        this.opcode = opcode;
+    }
+
+    public int getRights() {
+        return rights;
+    }
+
+    public void setRights(int rights) {
+        this.rights = rights;
+    }
+
+    public boolean isFlagged() {
+        return flagged;
+    }
+
+    public void setFlagged(boolean flagged) {
+        this.flagged = flagged;
     }
 }
