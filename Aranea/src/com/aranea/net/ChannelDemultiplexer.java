@@ -32,6 +32,7 @@ public abstract class ChannelDemultiplexer implements Runnable {
     private final ServerSocketChannel server;
     private final Selector selector;
     private final InetSocketAddress address;
+
     private final HashMap<Integer, ChannelDemultiplexerEvent> events = new HashMap<>();
 
     public abstract void close(ChannelSession session);
@@ -68,9 +69,17 @@ public abstract class ChannelDemultiplexer implements Runnable {
             if (!token.isValid())
                 return;
             if (token.isAcceptable()) {
-                events.get(SelectionKey.OP_ACCEPT).execute(this, token);
+                ChannelDemultiplexerAcceptEvent accept_event
+                        = (ChannelDemultiplexerAcceptEvent) events.get(SelectionKey.OP_ACCEPT);
+                if (accept_event == null)
+                    return;
+                accept_event.execute(this, token);
             } else if (token.isReadable()) {
-                events.get(SelectionKey.OP_READ).execute(this, token);
+                ChannelDemultiplexerAcceptEvent read_event
+                        = (ChannelDemultiplexerAcceptEvent) events.get(SelectionKey.OP_READ);
+                if (read_event == null)
+                    return;
+                read_event.execute(this, token);
             }
             $it.remove();
         }

@@ -21,13 +21,13 @@ import com.aranea.net.codec.ChannelMessageDecoder;
 
 public class LoginRequestMessageDecoder implements ChannelMessageDecoder {
 
-    public static final int FRESH_CONNECTION_INDEX = 0x10;
-    public static final int RECONNECTION_INDEX = 0x12;
+    public static final int FRESH_CONNECTION_STATUS = 0x10;
+    public static final int EXISTING_CONNECTION_STATUS = 0x12;
 
     @Override
     public boolean decode(ChannelSession session) {
         int status = session.getBuffer().get() & 0xFF;
-        if (status != FRESH_CONNECTION_INDEX && status != RECONNECTION_INDEX)
+        if (status != FRESH_CONNECTION_STATUS && status != EXISTING_CONNECTION_STATUS)
             return false;
 
         final int length = session.getBuffer().get() & 0xFF;

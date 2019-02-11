@@ -34,17 +34,12 @@ public class GameMessageEncoder implements ChannelMessageEncoder<PacketBuilder> 
         final PacketHeader header = builder.getHeader();
         int capacity = payload.limit();
 
-        capacity++;
-        switch (header) {
-
-            case VARIABLE_BYTE:
-                capacity += Byte.BYTES;
-                break;
-
-            case VARIABLE_SHORT:
-                capacity += Short.BYTES;
-                break;
-        }
+        /**
+         * Expands the capacity to the necessary allotment.
+         */
+        capacity += Byte.BYTES;
+        capacity += header.equals(PacketHeader.VARIABLE_BYTE) ? Byte.BYTES
+                : header.equals(PacketHeader.VARIABLE_SHORT) ? Short.BYTES : 0;
 
         ByteBuffer packet = ByteBuffer.allocate(capacity);
         packet.put((byte) opcode);

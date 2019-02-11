@@ -28,14 +28,15 @@ public class LoginHandshakeMessageDecoder implements ChannelMessageDecoder {
 
         /**
          * The name hash. Theorized to help select a proper login server.
-         * However, this variable has little to no use in emulation.
+         * However, this variable has little to no use in modern emulation.
          */
         session.getBuffer().get();
 
+        SecureRandom random = new SecureRandom();
         ByteBuffer response = ByteBuffer.allocate(Byte.BYTES + Long.BYTES + Long.BYTES);
         response.putLong(0);
         response.put((byte) 0);
-        response.putLong(new SecureRandom().nextLong());
+        response.putLong(random.nextLong());
         session.write(response);
 
         session.setDecoder(new LoginRequestMessageDecoder());

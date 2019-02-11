@@ -30,8 +30,7 @@ public class ServiceRequestMessageDecoder implements ChannelMessageDecoder {
         if (service == LOGIN_SERVICE_INDEX) {
             session.setDecoder(new LoginHandshakeMessageDecoder());
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 }

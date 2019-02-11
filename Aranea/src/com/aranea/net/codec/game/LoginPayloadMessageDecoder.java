@@ -22,6 +22,8 @@ import java.nio.ByteBuffer;
 
 public class LoginPayloadMessageDecoder implements ChannelMessageDecoder {
 
+    public static final int SUCCESSFUL_LOGIN_RESPONSE_OPCODE = 2;
+
     private final int length;
 
     public LoginPayloadMessageDecoder(int length) {
@@ -31,7 +33,7 @@ public class LoginPayloadMessageDecoder implements ChannelMessageDecoder {
     @Override
     public boolean decode(ChannelSession session) {
         ByteBuffer response = ByteBuffer.allocate(Byte.BYTES + Byte.BYTES + Byte.BYTES);
-        response.put((byte) 2);
+        response.put((byte) SUCCESSFUL_LOGIN_RESPONSE_OPCODE);
         response.put((byte) 0);
         response.put((byte) 0);
         session.write(response);

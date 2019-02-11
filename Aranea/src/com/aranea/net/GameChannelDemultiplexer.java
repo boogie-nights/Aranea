@@ -34,6 +34,5 @@ public class GameChannelDemultiplexer extends ChannelDemultiplexer {
     @Override
     public void accept(ChannelSession session) {
         session.setDecoder(new ServiceRequestMessageDecoder());
-        System.out.println("Successfully accepted a connection from " + session.getSocket() + ".");
     }
 }
