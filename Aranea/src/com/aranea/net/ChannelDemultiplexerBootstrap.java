@@ -23,19 +23,19 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class ChannelDemultiplexerBootstrap {
-    
+
     private ScheduledExecutorService executor;
     private ChannelDemultiplexer demultiplexer;
-    
+
     public ChannelDemultiplexerBootstrap(ChannelDemultiplexer demultiplexer) {
         this(Executors.newSingleThreadScheduledExecutor(), demultiplexer);
     }
-    
+
     public ChannelDemultiplexerBootstrap(ScheduledExecutorService executor, ChannelDemultiplexer demultiplexer) {
         this.executor = executor;
         this.demultiplexer = demultiplexer;
     }
-    
+
     public ScheduledFuture<?> initialize() throws IOException {
         demultiplexer.start();
         return executor.scheduleAtFixedRate(demultiplexer, 0, ChannelDemultiplexer.DEFAULT_THREAD_RATE, TimeUnit.MILLISECONDS);

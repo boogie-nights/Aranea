@@ -21,7 +21,7 @@ import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.util.HashMap;
 import java.util.Iterator;
 
 public abstract class ChannelDemultiplexer implements Runnable {
@@ -32,9 +32,9 @@ public abstract class ChannelDemultiplexer implements Runnable {
     private ServerSocketChannel server;
     private Selector selector;
     private InetSocketAddress address;
+    private final HashMap<Integer, ChannelDemultiplexerEvent> events = new HashMap<>();
 
     public abstract void close(ChannelSession session);
-
     public abstract void accept(ChannelSession session);
 
     public ChannelDemultiplexer(InetSocketAddress address) throws IOException {
@@ -48,6 +48,9 @@ public abstract class ChannelDemultiplexer implements Runnable {
     }
 
     public void start() throws IOException {
+        events.put(SelectionKey.OP_ACCEPT, new ChannelDemultiplexerAcceptEvent());
+        events.put(SelectionKey.OP_READ, new ChannelDemultiplexerReadEvent());
+
         server.configureBlocking(CHANNEL_BLOCKING_MODE);
         server.register(selector, SelectionKey.OP_ACCEPT);
         server.bind(address);
@@ -66,36 +69,9 @@ public abstract class ChannelDemultiplexer implements Runnable {
             if (!token.isValid())
                 return;
             if (token.isAcceptable()) {
-                try {
-                    SocketChannel socket = server.accept();
-                    if (socket == null)
-                        continue;
-                    socket.configureBlocking(CHANNEL_BLOCKING_MODE);
-                    SelectionKey priv_token = socket.register(selector, SelectionKey.OP_READ);
-                    ChannelSession session = new ChannelSession(this, priv_token, socket);
-                    session.setState(ChannelState.CONNECTED);
-                    priv_token.attach(session);
-
-                    accept(session);
-                } catch (IOException exception) {
-                    exception.printStackTrace(System.out);
-                }
+                events.get(SelectionKey.OP_ACCEPT).execute(this, token);
             } else if (token.isReadable()) {
-                ChannelSession session = (ChannelSession) token.attachment();
-                if (session == null)
-                    return;
-                try {
-                    session.getBuffer().clear();
-                    if (session.getSocket().read(session.getBuffer()) != -1) {
-                        session.getBuffer().flip();
-                        while (session.getBuffer().hasRemaining()) {
-                            if (!session.getDecoder().decode(session))
-                                session.shutdown();
-                        }
-                    }
-                } catch (IOException exception) {
-                    session.shutdown();
-                }
+                events.get(SelectionKey.OP_READ).execute(this, token);
             }
             $it.remove();
         }
