@@ -17,9 +17,9 @@
 package com.aranea.net.packet.builders;
 
 public final class PacketBuilderConstants {
-    
+
     public static final int GAME_TEXT_MESSAGE_PACKET_OPCODE = 253;
-    
+
     /**
      * A byte value of ten is used to denote an end of sequence.
      */

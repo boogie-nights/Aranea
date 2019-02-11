@@ -29,24 +29,42 @@ public class ChannelSession {
 
     private final SelectionKey token;
     private final SocketChannel socket;
-    
+    private final ChannelDemultiplexer demultiplexer;
+
     private ChannelMessageEncoder encoder;
     private ChannelMessageDecoder decoder;
+    private ByteBuffer buffer = ByteBuffer.allocate(512);
+    private ChannelState state;
 
-    public ChannelSession(SelectionKey token, SocketChannel socket) {
+    public ChannelSession(ChannelDemultiplexer demultiplexer, SelectionKey token, SocketChannel socket) {
+        this.demultiplexer = demultiplexer;
         this.token = token;
         this.socket = socket;
     }
-    
-    public void write(ByteBuffer buffer) {
-        buffer.flip();
+
+    public void write(ByteBuffer bytes) {
+        bytes.flip();
         try {
-            socket.write(buffer);
+            socket.write(bytes);
         } catch (IOException exception) {
-            exception.printStackTrace(System.out);
+            shutdown();
         }
     }
-    
+
+    public void shutdown() {
+        if (state.equals(ChannelState.DISCONNECTED))
+            return;
+        try {
+            socket.close();
+        } catch (IOException exception) {
+            exception.printStackTrace(System.out);
+        } finally {
+            token.cancel();
+            demultiplexer.close(this);
+        }
+        setState(ChannelState.DISCONNECTED);
+    }
+
     public void encode(PacketBuilder builder) {
         if (encoder == null || !(encoder instanceof GameMessageEncoder))
             throw new UnsupportedOperationException("The current encoder does not support this operation.");
@@ -76,5 +94,25 @@ public class ChannelSession {
 
     public void setDecoder(ChannelMessageDecoder decoder) {
         this.decoder = decoder;
+    }
+
+    public ChannelDemultiplexer getDemultiplexer() {
+        return demultiplexer;
+    }
+
+    public ByteBuffer getBuffer() {
+        return buffer;
+    }
+
+    public void setBuffer(ByteBuffer buffer) {
+        this.buffer = buffer;
+    }
+
+    public ChannelState getState() {
+        return state;
+    }
+
+    public void setState(ChannelState state) {
+        this.state = state;
     }
 }

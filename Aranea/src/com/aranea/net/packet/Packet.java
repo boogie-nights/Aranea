@@ -14,42 +14,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aranea.net;
+package com.aranea.net.packet;
 
 import java.nio.ByteBuffer;
 
-public class OutboundByteBuffer {
+public class Packet {
 
+    private int opcode;
+    private int length;
     private ByteBuffer buffer;
 
-    public OutboundByteBuffer(int capacity) {
-        this(ByteBuffer.allocate(capacity));
-    }
-
-    public OutboundByteBuffer writeByte(int value) {
-        buffer.put((byte) value);
-        return this;
-    }
-
-    public OutboundByteBuffer writeBytes(byte[] values) {
-        buffer.put(values);
-        return this;
-    }
-
-    public OutboundByteBuffer(ByteBuffer buffer) {
+    public Packet(int opcode, int length, ByteBuffer buffer) {
+        this.opcode = opcode;
+        this.length = length;
         this.buffer = buffer;
     }
 
-    public void flip() {
-        buffer.flip();
+    public int getOpcode() {
+        return opcode;
     }
 
-    public void compact() {
-        buffer.compact();
+    public void setOpcode(int opcode) {
+        this.opcode = opcode;
     }
 
-    public int limit() {
-        return buffer.limit();
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
     }
 
     public ByteBuffer getBuffer() {

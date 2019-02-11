@@ -20,5 +20,14 @@ import com.aranea.net.ChannelSession;
 
 public interface ChannelMessageDecoder {
 
+    /**
+     * Decodes an array of bytes that has been read from a
+     * {@link SocketChannel}.
+     *
+     * @param session The {@link ChannelSession} that received the message.
+     * @return Denotes if the operation was successful. If the value returned is
+     * <code> false </code> then the associated {@link ChannelSession} will
+     * automatically terminate.
+     */
     boolean decode(ChannelSession session);
 }

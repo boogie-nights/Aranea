@@ -14,23 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aranea;
+package com.aranea.net.codec;
 
-import com.aranea.net.ChannelDemultiplexerBootstrap;
-import com.aranea.net.GameChannelDemultiplexer;
-import java.io.IOException;
-import java.net.InetSocketAddress;
+import com.aranea.net.ChannelSession;
 
-public class Aranea {
+public class LoginHandshakeMessageDecoder implements ChannelMessageDecoder {
 
-    public static void main(String[] commands) {
-        try {
-            ChannelDemultiplexerBootstrap bootstrap = new ChannelDemultiplexerBootstrap(
-                    new GameChannelDemultiplexer(new InetSocketAddress(43594)));
-            bootstrap.initialize();
-        } catch (IOException exception) {
-            exception.printStackTrace(System.out);
-        }
-        System.out.println("Aranea has successfully started.");
+    @Override
+    public boolean decode(ChannelSession session) {
+        return true;
     }
 }
