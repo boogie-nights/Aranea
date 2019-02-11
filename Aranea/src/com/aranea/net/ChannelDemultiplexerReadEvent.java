@@ -16,7 +16,6 @@
  */
 package com.aranea.net;
 
-import java.io.IOException;
 import java.nio.channels.SelectionKey;
 
 public class ChannelDemultiplexerReadEvent implements ChannelDemultiplexerEvent {
@@ -26,17 +25,6 @@ public class ChannelDemultiplexerReadEvent implements ChannelDemultiplexerEvent 
         ChannelSession session = (ChannelSession) token.attachment();
         if (session == null)
             return;
-        try {
-            session.getBuffer().clear();
-            if (session.getSocket().read(session.getBuffer()) != -1) {
-                session.getBuffer().flip();
-                while (session.getBuffer().hasRemaining()) {
-                    if (!session.getDecoder().decode(session))
-                        session.shutdown();
-                }
-            }
-        } catch (IOException exception) {
-            session.shutdown();
-        }
+        session.read();
     }
 }

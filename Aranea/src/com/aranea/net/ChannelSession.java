@@ -50,6 +50,21 @@ public class ChannelSession {
             shutdown();
         }
     }
+  
+    public void read() {
+        try {
+            buffer.clear();
+            if (socket.read(buffer) != -1) {
+                buffer.flip();
+                while (buffer.hasRemaining()) {
+                    if (!decoder.decode(this))
+                        shutdown();
+                }
+            }
+        } catch (IOException exception) {
+            shutdown();
+        }
+    }
 
     public void shutdown() {
         if (state.equals(ChannelState.DISCONNECTED))

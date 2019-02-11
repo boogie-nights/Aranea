@@ -29,9 +29,9 @@ public abstract class ChannelDemultiplexer implements Runnable {
     public static final boolean CHANNEL_BLOCKING_MODE = false;
     public static final int DEFAULT_THREAD_RATE = 30;
 
-    private ServerSocketChannel server;
-    private Selector selector;
-    private InetSocketAddress address;
+    private final ServerSocketChannel server;
+    private final Selector selector;
+    private final InetSocketAddress address;
     private final HashMap<Integer, ChannelDemultiplexerEvent> events = new HashMap<>();
 
     public abstract void close(ChannelSession session);
@@ -77,27 +77,15 @@ public abstract class ChannelDemultiplexer implements Runnable {
         }
     }
 
-    public ServerSocketChannel getServer() {
+    public ServerSocketChannel server() {
         return server;
     }
 
-    public void setServer(ServerSocketChannel server) {
-        this.server = server;
-    }
-
-    public Selector getSelector() {
+    public Selector selector() {
         return selector;
     }
 
-    public void setSelector(Selector selector) {
-        this.selector = selector;
-    }
-
-    public InetSocketAddress getAddress() {
+    public InetSocketAddress address() {
         return address;
-    }
-
-    public void setAddress(InetSocketAddress address) {
-        this.address = address;
     }
 }

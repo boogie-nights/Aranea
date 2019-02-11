@@ -25,12 +25,12 @@ public class ChannelDemultiplexerAcceptEvent implements ChannelDemultiplexerEven
     @Override
     public void execute(ChannelDemultiplexer demultiplexer, SelectionKey token) {
         try {
-            SocketChannel socket = demultiplexer.getServer().accept();
+            SocketChannel socket = demultiplexer.server().accept();
             if (socket == null)
                 return;
 
             socket.configureBlocking(ChannelDemultiplexer.CHANNEL_BLOCKING_MODE);
-            SelectionKey priv_token = socket.register(demultiplexer.getSelector(), SelectionKey.OP_READ);
+            SelectionKey priv_token = socket.register(demultiplexer.selector(), SelectionKey.OP_READ);
             ChannelSession session = new ChannelSession(demultiplexer, priv_token, socket);
             session.setState(ChannelState.CONNECTED);
             priv_token.attach(session);

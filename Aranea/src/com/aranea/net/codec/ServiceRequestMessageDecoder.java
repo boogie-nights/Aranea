@@ -20,13 +20,17 @@ import com.aranea.net.ChannelSession;
 
 public class ServiceRequestMessageDecoder implements ChannelMessageDecoder {
 
+    public static final int LOGIN_SERVICE_INDEX = 0xE;
+    public static final int ONDEMAND_SERVICE_INDEX = 0xF;
+
     @Override
     public boolean decode(ChannelSession session) {
         int service = session.getBuffer().get() & 0xFF;
-        if (service == 0xE) {
+        if (service == LOGIN_SERVICE_INDEX) {
             session.setDecoder(new LoginHandshakeMessageDecoder());
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 }

@@ -17,11 +17,27 @@
 package com.aranea.net.codec;
 
 import com.aranea.net.ChannelSession;
+import java.nio.ByteBuffer;
+import java.security.SecureRandom;
 
 public class LoginHandshakeMessageDecoder implements ChannelMessageDecoder {
 
     @Override
     public boolean decode(ChannelSession session) {
+
+        /**
+         * The name hash. Theorized to help select a proper login server.
+         * However, this variable has little to no use in emulation.
+         */
+        session.getBuffer().get();
+
+        ByteBuffer response = ByteBuffer.allocate(Byte.BYTES + Long.BYTES + Long.BYTES);
+        response.putLong(0);
+        response.put((byte) 0);
+        response.putLong(new SecureRandom().nextLong());
+        session.write(response);
+
+        session.setDecoder(new LoginRequestMessageDecoder());
         return true;
     }
 }
