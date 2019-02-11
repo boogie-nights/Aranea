@@ -14,23 +14,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aranea.net.codec;
+package com.aranea.net.codec.jaggrab;
 
-import com.aranea.net.ChannelSession;
+public enum ArchiveRequest {
 
-public class LoginRequestMessageDecoder implements ChannelMessageDecoder {
+    TITLE("title", 1),
+    CONFIG("config", 2),
+    INTERFACE("interface", 3),
+    MEDIA("media", 4),
+    VERSION_LIST("versionlist", 5),
+    TEXTURES("textures", 6),
+    WORDENC("wordenc", 7),
+    SOUNDS("sounds", 8);
 
-    public static final int FRESH_CONNECTION_INDEX = 0x10;
-    public static final int RECONNECTION_INDEX = 0x12;
+    private String name;
+    private int index;
 
-    @Override
-    public boolean decode(ChannelSession session) {
-        int status = session.getBuffer().get() & 0xFF;
-        if (status != FRESH_CONNECTION_INDEX && status != RECONNECTION_INDEX)
-            return false;
+    ArchiveRequest(String name, int index) {
+        this.name = name;
+        this.index = index;
+    }
 
-        final int length = session.getBuffer().get() & 0xFF;
-        session.setDecoder(new LoginPayloadMessageDecoder(length));
-        return true;
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

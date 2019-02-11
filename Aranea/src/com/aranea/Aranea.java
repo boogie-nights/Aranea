@@ -18,6 +18,7 @@ package com.aranea;
 
 import com.aranea.net.ChannelDemultiplexerBootstrap;
 import com.aranea.net.GameChannelDemultiplexer;
+import com.aranea.net.JaggrabChannelDemultiplexer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
@@ -25,9 +26,13 @@ public class Aranea {
 
     public static void main(String[] commands) {
         try {
-            ChannelDemultiplexerBootstrap bootstrap = new ChannelDemultiplexerBootstrap(
+            ChannelDemultiplexerBootstrap jaggrab_bootstrap = new ChannelDemultiplexerBootstrap(
+                    new JaggrabChannelDemultiplexer(new InetSocketAddress(43595)));
+            jaggrab_bootstrap.initialize();
+
+            ChannelDemultiplexerBootstrap game_bootstrap = new ChannelDemultiplexerBootstrap(
                     new GameChannelDemultiplexer(new InetSocketAddress(43594)));
-            bootstrap.initialize();
+            game_bootstrap.initialize();
         } catch (IOException exception) {
             exception.printStackTrace(System.out);
         }

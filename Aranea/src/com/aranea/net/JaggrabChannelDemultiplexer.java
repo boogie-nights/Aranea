@@ -14,14 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aranea.net.codec;
+package com.aranea.net;
 
-import com.aranea.net.ChannelSession;
+import com.aranea.net.codec.jaggrab.JaggrabRequestMessageDecoder;
+import java.io.IOException;
+import java.net.InetSocketAddress;
 
-public class GameMessageDecoder implements ChannelMessageDecoder {
+public class JaggrabChannelDemultiplexer extends ChannelDemultiplexer {
+
+    public JaggrabChannelDemultiplexer(InetSocketAddress address) throws IOException {
+        super(address);
+    }
 
     @Override
-    public boolean decode(ChannelSession session) {
-        return true;
+    public void close(ChannelSession session) {
+
+    }
+
+    @Override
+    public void accept(ChannelSession session) {
+        session.setDecoder(new JaggrabRequestMessageDecoder());
     }
 }

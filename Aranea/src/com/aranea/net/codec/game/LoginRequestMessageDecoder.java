@@ -14,30 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aranea.net.codec;
+package com.aranea.net.codec.game;
 
 import com.aranea.net.ChannelSession;
-import java.nio.ByteBuffer;
-import java.security.SecureRandom;
+import com.aranea.net.codec.ChannelMessageDecoder;
 
-public class LoginHandshakeMessageDecoder implements ChannelMessageDecoder {
+public class LoginRequestMessageDecoder implements ChannelMessageDecoder {
+
+    public static final int FRESH_CONNECTION_INDEX = 0x10;
+    public static final int RECONNECTION_INDEX = 0x12;
 
     @Override
     public boolean decode(ChannelSession session) {
+        int status = session.getBuffer().get() & 0xFF;
+        if (status != FRESH_CONNECTION_INDEX && status != RECONNECTION_INDEX)
+            return false;
 
-        /**
-         * The name hash. Theorized to help select a proper login server.
-         * However, this variable has little to no use in emulation.
-         */
-        session.getBuffer().get();
-
-        ByteBuffer response = ByteBuffer.allocate(Byte.BYTES + Long.BYTES + Long.BYTES);
-        response.putLong(0);
-        response.put((byte) 0);
-        response.putLong(new SecureRandom().nextLong());
-        session.write(response);
-
-        session.setDecoder(new LoginRequestMessageDecoder());
+        final int length = session.getBuffer().get() & 0xFF;
+        session.setDecoder(new LoginPayloadMessageDecoder(length));
         return true;
     }
 }

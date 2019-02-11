@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aranea.net.codec;
+package com.aranea.net.codec.game;
 
 import com.aranea.net.ChannelSession;
+import com.aranea.net.codec.ChannelMessageDecoder;
 import java.nio.ByteBuffer;
 
 public class LoginPayloadMessageDecoder implements ChannelMessageDecoder {

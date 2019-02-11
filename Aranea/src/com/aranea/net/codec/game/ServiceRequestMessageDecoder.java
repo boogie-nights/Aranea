@@ -14,26 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aranea.net;
+package com.aranea.net.codec.game;
 
-import com.aranea.net.codec.game.ServiceRequestMessageDecoder;
-import java.io.IOException;
-import java.net.InetSocketAddress;
+import com.aranea.net.ChannelSession;
+import com.aranea.net.codec.ChannelMessageDecoder;
 
-public class GameChannelDemultiplexer extends ChannelDemultiplexer {
+public class ServiceRequestMessageDecoder implements ChannelMessageDecoder {
 
-    public GameChannelDemultiplexer(InetSocketAddress address) throws IOException {
-        super(address);
-    }
+    public static final int LOGIN_SERVICE_INDEX = 0xE;
+    public static final int ONDEMAND_SERVICE_INDEX = 0xF;
 
     @Override
-    public void close(ChannelSession session) {
-
-    }
-
-    @Override
-    public void accept(ChannelSession session) {
-        session.setDecoder(new ServiceRequestMessageDecoder());
-        System.out.println("Successfully accepted a connection from " + session.getSocket() + ".");
+    public boolean decode(ChannelSession session) {
+        int service = session.getBuffer().get() & 0xFF;
+        if (service == LOGIN_SERVICE_INDEX) {
+            session.setDecoder(new LoginHandshakeMessageDecoder());
+            return true;
+        } else {
+            return false;
+        }
     }
 }

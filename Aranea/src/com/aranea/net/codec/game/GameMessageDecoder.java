@@ -14,23 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aranea.net.codec;
+package com.aranea.net.codec.game;
 
 import com.aranea.net.ChannelSession;
+import com.aranea.net.codec.ChannelMessageDecoder;
 
-public class ServiceRequestMessageDecoder implements ChannelMessageDecoder {
-
-    public static final int LOGIN_SERVICE_INDEX = 0xE;
-    public static final int ONDEMAND_SERVICE_INDEX = 0xF;
+public class GameMessageDecoder implements ChannelMessageDecoder {
 
     @Override
     public boolean decode(ChannelSession session) {
-        int service = session.getBuffer().get() & 0xFF;
-        if (service == LOGIN_SERVICE_INDEX) {
-            session.setDecoder(new LoginHandshakeMessageDecoder());
-            return true;
-        } else {
-            return false;
-        }
+        return true;
     }
 }

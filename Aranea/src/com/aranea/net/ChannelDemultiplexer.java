@@ -50,7 +50,6 @@ public abstract class ChannelDemultiplexer implements Runnable {
     public void start() throws IOException {
         events.put(SelectionKey.OP_ACCEPT, new ChannelDemultiplexerAcceptEvent());
         events.put(SelectionKey.OP_READ, new ChannelDemultiplexerReadEvent());
-
         server.configureBlocking(CHANNEL_BLOCKING_MODE);
         server.register(selector, SelectionKey.OP_ACCEPT);
         server.bind(address);

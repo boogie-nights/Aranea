@@ -18,7 +18,7 @@ package com.aranea.net;
 
 import com.aranea.net.codec.ChannelMessageDecoder;
 import com.aranea.net.codec.ChannelMessageEncoder;
-import com.aranea.net.codec.GameMessageEncoder;
+import com.aranea.net.codec.game.GameMessageEncoder;
 import com.aranea.net.packet.builders.PacketBuilder;
 import java.io.IOException;
 import java.nio.ByteBuffer;
