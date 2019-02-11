@@ -18,8 +18,6 @@ package com.aranea.net;
 
 import com.aranea.net.codec.ChannelMessageDecoder;
 import com.aranea.net.codec.ChannelMessageEncoder;
-import com.aranea.net.codec.game.GameMessageEncoder;
-import com.aranea.net.packet.builders.PacketBuilder;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
@@ -52,6 +50,8 @@ public class ChannelSession {
     }
   
     public void read() {
+        if (decoder == null)
+            return;
         try {
             buffer.clear();
             if (socket.read(buffer) != -1) {
@@ -80,11 +80,8 @@ public class ChannelSession {
         setState(ChannelState.DISCONNECTED);
     }
 
-    public void encode(PacketBuilder builder) {
-        if (encoder == null || !(encoder instanceof GameMessageEncoder))
-            throw new UnsupportedOperationException("The current encoder does not support this operation.");
-        ByteBuffer payload = encoder.encode(this, builder);
-        write(payload);
+    public void encode(Object message) {
+        write(encoder.encode(this, message));
     }
 
     public SelectionKey getToken() {

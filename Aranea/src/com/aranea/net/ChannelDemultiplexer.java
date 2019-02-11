@@ -75,8 +75,8 @@ public abstract class ChannelDemultiplexer implements Runnable {
                     return;
                 accept_event.execute(this, token);
             } else if (token.isReadable()) {
-                ChannelDemultiplexerAcceptEvent read_event
-                        = (ChannelDemultiplexerAcceptEvent) events.get(SelectionKey.OP_READ);
+                ChannelDemultiplexerReadEvent read_event
+                        = (ChannelDemultiplexerReadEvent) events.get(SelectionKey.OP_READ);
                 if (read_event == null)
                     return;
                 read_event.execute(this, token);

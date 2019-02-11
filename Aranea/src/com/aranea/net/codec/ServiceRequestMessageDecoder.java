@@ -20,6 +20,7 @@ import com.aranea.net.ChannelSession;
 
 import com.aranea.net.codec.game.LoginHandshakeMessageDecoder;
 import com.aranea.net.codec.ondemand.OndemandRequestMessageDecoder;
+import com.aranea.net.codec.ondemand.OndemandResponseMessageEncoder;
 
 public class ServiceRequestMessageDecoder implements ChannelMessageDecoder {
 
@@ -32,6 +33,7 @@ public class ServiceRequestMessageDecoder implements ChannelMessageDecoder {
         if (service == LOGIN_SERVICE_INDEX) {
             session.setDecoder(new LoginHandshakeMessageDecoder());
         } else if (service == ONDEMAND_SERVICE_INDEX) {
+            session.setEncoder(new OndemandResponseMessageEncoder());
             session.setDecoder(new OndemandRequestMessageDecoder());
         }
         return service == LOGIN_SERVICE_INDEX || service == ONDEMAND_SERVICE_INDEX;
