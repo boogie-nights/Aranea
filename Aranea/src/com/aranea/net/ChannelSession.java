@@ -48,7 +48,7 @@ public class ChannelSession {
             shutdown();
         }
     }
-  
+
     public void read() {
         if (decoder == null)
             return;
@@ -81,6 +81,8 @@ public class ChannelSession {
     }
 
     public void encode(Object message) {
+        if (encoder == null)
+            return;
         write(encoder.encode(this, message));
     }
 
