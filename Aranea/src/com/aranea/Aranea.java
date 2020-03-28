@@ -26,13 +26,13 @@ public class Aranea {
 
     public static void main(String[] commands) {
         try {
-            ChannelDemultiplexerBootstrap jaggrab_bootstrap = new ChannelDemultiplexerBootstrap(
+            ChannelDemultiplexerBootstrap jaggrabBootstrap = new ChannelDemultiplexerBootstrap(
                     new JaggrabChannelDemultiplexer(new InetSocketAddress(43595)));
-            jaggrab_bootstrap.initialize();
+            jaggrabBootstrap.initialize();
 
-            ChannelDemultiplexerBootstrap game_bootstrap = new ChannelDemultiplexerBootstrap(
+            ChannelDemultiplexerBootstrap gameBootstrap = new ChannelDemultiplexerBootstrap(
                     new GameChannelDemultiplexer(new InetSocketAddress(43594)));
-            game_bootstrap.initialize();
+            gameBootstrap.initialize();
         } catch (IOException exception) {
             exception.printStackTrace(System.out);
         }
