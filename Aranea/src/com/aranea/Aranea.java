@@ -19,20 +19,27 @@ package com.aranea;
 import com.aranea.net.ChannelDemultiplexerBootstrap;
 import com.aranea.net.GameChannelDemultiplexer;
 import com.aranea.net.JaggrabChannelDemultiplexer;
+import com.aranea.util.AraneaLogger;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
 public class Aranea {
 
     public static void main(String[] commands) {
+
+        AraneaLogger logger = new AraneaLogger();
+
         try {
             ChannelDemultiplexerBootstrap jaggrabBootstrap = new ChannelDemultiplexerBootstrap(
-                    new JaggrabChannelDemultiplexer(new InetSocketAddress(43595)));
+                    new JaggrabChannelDemultiplexer(new InetSocketAddress(Constants.JAGGRAB_PORT)));
             jaggrabBootstrap.initialize();
+            logger.log("JAGGRAB Listening on Port: " + Constants.JAGGRAB_PORT);
 
             ChannelDemultiplexerBootstrap gameBootstrap = new ChannelDemultiplexerBootstrap(
-                    new GameChannelDemultiplexer(new InetSocketAddress(43594)));
+                    new GameChannelDemultiplexer(new InetSocketAddress(Constants.SERVER_PORT)));
             gameBootstrap.initialize();
+            logger.log("Server Listening on Port: " + Constants.SERVER_PORT);
         } catch (IOException exception) {
             exception.printStackTrace(System.out);
         }
